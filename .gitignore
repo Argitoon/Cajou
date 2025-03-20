@@ -1,0 +1,15 @@
+.vscode/
+.env/
+venv/
+
+*/__pycache__/
+
+src/application/__pycache__/
+src/classifier/__pycache__/
+src/tests/__pycache__/
+
+captured_images/
+saved_images/
+src/data/temporary_data/
+src/data/cache/
+src/data/capture/

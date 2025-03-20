@@ -1,0 +1,37 @@
+{
+    "CLASS_NAMES" : ["Jouet_Eveil", "Jouet_Imitation", "Playmobil", "Poupee", "Vehicule"],
+    "CLASS_NAMES_FR" : ["Jouet d'éveil", "Jouet d'imitation", "Playmobil", "Poupée", "Véhicule"],
+    
+    "MODEL_TYPE" : "RegNet_TL",
+
+    "APP_KEY" : "fvnvmnv3tyhb9hs",
+    "APP_SECRET" : "veiv9f8b9zxnab5",
+
+    "PID_SAVE" : "training_pid.txt",
+
+    "LOCAL_PATH" : {
+        # Used by the app
+        "APP_MODEL": "data/model/model.pth", # Model used by the app
+        "APP_DATASET": "data/temporary_data", # Dataset used by the app (copied from remote dataset)
+        "CAPTURE": "data/capture", # Captured images (saved when a picture is taken)
+        
+        # Used for training (manual)
+        "TRAIN_DATASET" : "data/training_data", # Training dataset
+        "TRAIN_MODEL" : "data/model/model.pth", # Name of the model after training
+        "TRAIN_RESULTS" : "classifier/train_results", # Results of the training (curves and confusion matrix)
+        "CACHE": "data/cache", # Cache used for training for data augmentation
+        
+        # Used for testing (manual)
+        "TEST_UNICLASS_DATASET" : "data/test_data/uniclass", # Test dataset with one class per image
+        "TEST_MULTICLASS_DATASET" : "data/test_data/multiclass", # Test dataset with multiple classes per image
+        "TEST_COMPARE_MODELS_DATASET" : "data/test_data/models", # Test dataset for comparison of models
+        "TEST_MODEL" : "data/model/model.pth", # Model used for testing
+        "TEST_RESULTS" : "tests/test_results", # Results of the testing (confusion matrix)
+    },
+
+    "REMOTE_PATH" : {
+        "DATASET": "/saved_images", # Training dataset and Saved images path (in dropbox)
+        "MODEL": "/model/model.pth" # Model path (in dropbox)
+    }
+
+}

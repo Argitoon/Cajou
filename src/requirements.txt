@@ -1,0 +1,13 @@
+torch
+numpy
+matplotlib
+tqdm
+scikit-learn
+torchvision
+pandas
+Pillow
+timm
+dropbox
+opencv-python
+PyQt6
+PyYAML

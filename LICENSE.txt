@@ -1,0 +1,17 @@
+MIT License  
+
+Copyright (C) 2025 Iban Oyharcabal, Corentin Seutin, Anessa Diallo,  
+et l'Université de Bordeaux.  
+
+Permission est accordée, gratuitement, à toute personne obtenant une copie de ce logiciel et des fichiers de documentation associés à CAJOU,  
+de commercialiser CAJOU sans restriction, y compris sans limitation les droits d'utiliser, copier, modifier, fusionner, publier, distribuer,  
+sous-licencier et/ou vendre des copies de CAJOU, sous réserve des conditions suivantes :  
+
+1. Le présent avis de droit d’auteur et cet avis de permission doivent être inclus dans toutes les copies ou parties substantielles du Logiciel.  
+2. Ce projet a été développé dans le cadre d’un projet de fin d’études en collaboration avec le Master Informatique de l'Université de Bordeaux.  
+   Il a été réalisé par Iban Oyharcabal, Corentin Seutin, Anessa Diallo et encadré par Marie Beurton Aimar pour le l'entreprise DEUZIO.  
+
+LE LOGICIEL EST FOURNI "TEL QUEL", SANS GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE, Y COMPRIS MAIS SANS LIMITATION LES GARANTIES DE  
+COMMERCIALISATION, D’ADÉQUATION À UN USAGE PARTICULIER ET D’ABSENCE DE CONTREFAÇON. EN AUCUN CAS LES AUTEURS OU TITULAIRES DU COPYRIGHT  
+NE POURRONT ÊTRE TENUS POUR RESPONSABLES DE TOUTE RÉCLAMATION, DOMMAGE OU AUTRE RESPONSABILITÉ, QUE CE SOIT DANS UNE ACTION CONTRACTUELLE,  
+DÉLICTUELLE OU AUTRE, PROVENANT DE, OU EN LIEN AVEC LE LOGICIEL OU L’UTILISATION OU D’AUTRES INTERACTIONS AVEC LE LOGICIEL.  

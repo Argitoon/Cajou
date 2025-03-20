@@ -1,0 +1,68 @@
+{
+    "ConvNeXT_TL": {
+        "Mean accuracy": 58.0,
+        "Confidence": {
+            "Mean confidence": 54.487,
+            "Jouet_Eveil": 37.913,
+            "Jouet_Imitation": 33.538,
+            "Playmobil": 86.085,
+            "Poupee": 59.762,
+            "Vehicule": 55.135
+        }
+    },
+    "DenseNet121_TL": {
+        "Mean accuracy": 64.0,
+        "Confidence": {
+            "Mean confidence": 60.123,
+            "Jouet_Eveil": 57.302,
+            "Jouet_Imitation": 49.707,
+            "Playmobil": 52.968,
+            "Poupee": 57.501,
+            "Vehicule": 83.138
+        }
+    },
+    "EfficientNetB0_TL": {
+        "Mean accuracy": 67.0,
+        "Confidence": {
+            "Mean confidence": 65.489,
+            "Jouet_Eveil": 62.767,
+            "Jouet_Imitation": 48.872,
+            "Playmobil": 73.037,
+            "Poupee": 75.355,
+            "Vehicule": 67.413
+        }
+    },
+    "RegNet_TL": {
+        "Mean accuracy": 67.0,
+        "Confidence": {
+            "Mean confidence": 64.791,
+            "Jouet_Eveil": 30.485,
+            "Jouet_Imitation": 71.689,
+            "Playmobil": 55.18,
+            "Poupee": 76.915,
+            "Vehicule": 89.686
+        }
+    },
+    "ResNet50_TL": {
+        "Mean accuracy": 20.0,
+        "Confidence": {
+            "Mean confidence": 20.979,
+            "Jouet_Eveil": 3.796,
+            "Jouet_Imitation": 0.034,
+            "Playmobil": 0.054,
+            "Poupee": 1.043,
+            "Vehicule": 99.966
+        }
+    },
+    "Xception_TL": {
+        "Mean accuracy": 64.0,
+        "Confidence": {
+            "Mean confidence": 63.596,
+            "Jouet_Eveil": 42.277,
+            "Jouet_Imitation": 51.166,
+            "Playmobil": 70.691,
+            "Poupee": 84.012,
+            "Vehicule": 69.835
+        }
+    }
+}
