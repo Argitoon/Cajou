@@ -14,10 +14,10 @@ Pour que **CAJOU** fonctionne correctement, il est nécessaire d'avoir **Python*
 installés. Heureusement, tout cela est géré automatiquement lors du premier lancement.  Il vous suffit 
 alors de **double-cliquer** sur le fichier correspondant à votre système d'exploitation :  
 - **Windows** : `CAJOU-Windows.bat`  
-- **Linux/macOS** : `CAJOU-Linux-Darwin`
+- **Linux/macOS** : `CAJOU-Linux-Darwin.sh`
 
 Si l'installation est interrompue, volontairement ou non, il faut supprimer le dossier `venv/` et 
-relancer l’installation en exécutant à nouveau le fichier `CAJOU-Windows.bat` ou `CAJOU-Linux-Darwin`.
+relancer l’installation en exécutant à nouveau le fichier `CAJOU-Windows.bat` ou `CAJOU-Linux-Darwin.sh`.
 
 Si besoin, l’installation des modules peut aussi être effectuée manuellement avec la commande suivante :  
 
