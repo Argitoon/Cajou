@@ -4,8 +4,8 @@
     
     "MODEL_TYPE" : "RegNet_TL",
 
-    "APP_KEY" : "fvnvmnv3tyhb9hs",
-    "APP_SECRET" : "veiv9f8b9zxnab5",
+    "APP_KEY" : "YOUR_APP_KEY",
+    "APP_SECRET" : "YOUR_APP_SECRET",
 
     "PID_SAVE" : "training_pid.txt",
 
