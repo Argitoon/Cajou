@@ -20,12 +20,12 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap, QFont, QImage, QFontDatabase, QIcon
 from PyQt6.QtWidgets import (
     QApplication, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
-    QFileDialog, QSizePolicy, QStackedWidget, QLineEdit, QInputDialog
+    QFileDialog, QSizePolicy, QStackedWidget, QLineEdit, QInputDialog, QGridLayout
 )
 
 # 3. Project-specific imports
-from classifier.tools import predict, load_model, validate_path, shorten_filename
-from application.dropbox_tools import count_images_on_dropbox, import_images_from_dropbox
+from classifier.tools import predict, load_model, validate_path, shorten_filename, load_nb_classes
+from application.dropbox_tools import count_images_on_dropbox, import_images_from_dropbox, count_nb_classes_on_dropbox
 
 # Load the configuration file
 with open("variables.yaml", "r", encoding="utf-8") as file:
@@ -250,11 +250,10 @@ class MainWindow(QWidget):
         self.select_button = self.create_button("Choisir une image sur cet appareil", self.select_image, size=TXT_SIZE)
         self.webcam_button = self.create_button("Prendre une photo", self.go_to_webcam_page, size=TXT_SIZE)
         
-        if self.model == None:
-            self.select_button.setEnabled(False)
+        if self.check_camera() == None:
             self.webcam_button.setEnabled(False)
         
-        model_button = self.create_button("Entraînner CAJOU", self.go_to_model_page, size=TXT_SIZE)
+        model_button = self.create_button("Entraîner CAJOU", self.go_to_model_page, size=TXT_SIZE)
 
         # Text
         self.save_path_text_homepage = self.create_text("", size=TXT_SIZE)
@@ -315,17 +314,12 @@ class MainWindow(QWidget):
         """
         Go back to the home page.
         """
-        if self.model == None:
-            self.select_button.setEnabled(False)
-            self.webcam_button.setEnabled(False)
-        else :
-            self.select_button.setEnabled(True)
-            self.webcam_button.setEnabled(True)
-            
+        
         self.reset_classif_page()
         self.stack.setCurrentWidget(self.home_page)
 
     # 3. WEBCAM PAGE
+    
     def create_webcam_page(self):
         """
         Create the webcam page where the user can see in real-time the video, choose an image name and capture a snapshot.
@@ -443,6 +437,7 @@ class MainWindow(QWidget):
         self.stack.setCurrentWidget(self.webcam_page)
     
     # 4. CLASSIFICATION PAGE
+    
     def create_classification_page(self):
         """
         Create the classification page with the image, classification text blocks, classification class and action buttons.
@@ -478,20 +473,19 @@ class MainWindow(QWidget):
         layout.addWidget(self.save_path_text_classif_page, alignment=Qt.AlignmentFlag.AlignCenter)
 
         # Class buttons
-        class_buttons_layout = QHBoxLayout()
+        class_buttons_layout = QGridLayout()
+        classes = CLASS_NAMES_FR + ["Hors Catégorie"]
+        max_columns = 6 # Maximum number of columns for the grid layout
         
-        for classn in CLASS_NAMES_FR:
-            index = CLASS_NAMES_FR.index(classn)
+        for index, classn in enumerate(classes):
+            row = index // max_columns
+            col = index % max_columns
+
             button = self.create_button(classn, lambda checked, i=index: self.choose_class(i), size=TXT_SIZE)
             self.class_buttons.append(button)
-            class_buttons_layout.addWidget(button)
-
+    
+            class_buttons_layout.addWidget(button, row, col)
         
-        # Add a button "Hors Catégorie" to allow the user to not classify the image
-        button_hors_categorie = self.create_button("Hors Catégorie", lambda checked, i=len(CLASS_NAMES_FR): self.choose_class(i), size=TXT_SIZE)
-        self.class_buttons.append(button_hors_categorie)
-        class_buttons_layout.addWidget(button_hors_categorie)
-
         for button in self.class_buttons:
             button.setStyleSheet(self.pred_button_style)
         
@@ -671,17 +665,36 @@ class MainWindow(QWidget):
                 self.block1.setPixmap(image.scaled(new_width, new_height, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
                 self.block1.setFixedSize(new_width, new_height)
             
-            # Classification results
-            classes, probabilities = predict(self.model, self.image_path, top=top)
+            if not self.model == None and len(CLASS_NAMES) == load_nb_classes(LOCAL_MODEL_PATH):                
+                # Classification results
+                classes, probabilities = predict(self.model, self.image_path, top=top)
             
-            # Saving the results in a string
-            prediction_text = ""
-            for i in range(top):
-                fr_class = CLASS_NAMES_FR[CLASS_NAMES.index(classes[i])]
-                prediction_text += "{} : {:.2f}%\n".format(fr_class, probabilities[i] * 100)
+                # Saving the results in a string
+                prediction_text = ""
+                for i in range(top):
+                    fr_class = CLASS_NAMES_FR[CLASS_NAMES.index(classes[i])]
+                    prediction_text += "{} : {:.2f}%\n".format(fr_class, probabilities[i] * 100)
 
-            # Set the string on the right side of the screen
-            self.block2.setText(prediction_text)
+                # Set the string on the right side of the screen
+                self.block2.setStyleSheet("color: #336633;")
+                self.block2.setText(prediction_text)
+            
+            elif self.model == None :
+                error_text = "Classification impossible !\n"
+                error_text += "Aucun modèle n'est chargé"
+
+                # chage color to red for error
+                self.block2.setStyleSheet("color: #ff6633;")
+                self.block2.setText(error_text)
+            else :
+                error_text = "Classification impossible !\n"
+                error_text += "Le nombre de classes du modèle ne correspond pas à celui\n"
+                error_text += "de l'application."
+                
+                # chage color to red for error
+                self.block2.setStyleSheet("color: #ff6633;")
+                self.block2.setText(error_text)
+                
             self.stack.setCurrentWidget(self.classification_page)
 
         self.update_next_button()
@@ -875,7 +888,7 @@ class MainWindow(QWidget):
                     return True
         return False
 
-    def is_model_online(self) -> bool:
+    def is_model_online(self) -> bool :
         """
         Check if the model is online.
         """
@@ -885,6 +898,25 @@ class MainWindow(QWidget):
             return True
         except dropbox.exceptions.ApiError as _:  # File not found
             return False
+    
+    def training_is_valid(self) -> tuple[bool, str]:
+        """
+        Check if the training can be started. A training can be started when the is at least one image in 
+        each class (on Dropbox) and there is no training in progress.
+        
+        :return: A tuple with a boolean indicating if the training is valid and a string with the message.
+        """
+        
+        for classn in CLASS_NAMES:
+            folder_name = REMOTE_DATA_PATH + "/" + classn
+            nb_images = count_images_on_dropbox(self.dbx, folder_name)
+            if nb_images < 1:
+                return False, f"Il n'y a pas d'image dans la classe {classn}."
+        
+        if self.is_model_training():
+            return False, "Un entraînement est en cours."
+        
+        return True, "CAJOU peut être entraîné."
     
     def go_to_model_page(self):
         """
@@ -896,10 +928,9 @@ class MainWindow(QWidget):
         self.update_nb_images_dbx()
         
         # Enable/Disable training button
-        if self.nb_images_dbx == None or self.nb_images_dbx < 1 or self.is_model_training() :
-            self.train_button.setEnabled(False)
-        else :
-            self.train_button.setEnabled(True)
+        is_valid, msg = self.training_is_valid()
+        self.train_button.setEnabled(is_valid)
+        self.model_txt.setText(msg)
         
         # Enable/Disable stop button
         if self.is_model_training() :

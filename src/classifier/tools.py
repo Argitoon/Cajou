@@ -2,6 +2,7 @@
 import os
 import yaml
 from typing import Tuple, List, Union
+import shutil
 
 # 2. Third-party libraries
 import torch
@@ -54,8 +55,27 @@ def validate_path(path : str) -> str:
             os.makedirs(p)
             print(f"Path {p} created")
 
+def load_nb_classes(model_path : str = MODEL_PATH) -> int:
+    """
+    Find the number of classes in a model
+    
+    :param model_path: the path to the model
+    """
+    checkpoint = torch.load(model_path, map_location=torch.device("cpu"))
+    
+    for key in checkpoint.keys():
+        if "fc.weight" in key or "classifier.weight" in key:
+            num_classes = checkpoint[key].shape[0]
+            break
+        
+    if num_classes is None:
+        print("Error: Could not detect num_classes in the checkpoint.")
+        return len(CLASS_NAMES) # Not always true, but better than nothing
+    
+    return num_classes
+
 def load_model(model_type = MODEL_TYPE, 
-               model_path : str = MODEL_TYPE, 
+               model_path : str = MODEL_PATH, 
                num_classes : int = None) -> nn.Module:
     """
     Load a model from a given path
@@ -72,14 +92,7 @@ def load_model(model_type = MODEL_TYPE,
     checkpoint = torch.load(model_path, map_location=device)
     
     if num_classes is None:
-        for key in checkpoint.keys():
-            if "fc.weight" in key or "classifier.weight" in key:
-                num_classes = checkpoint[key].shape[0]
-                break
-            
-        if num_classes is None:
-            print("Error: Could not detect num_classes in the checkpoint.")
-            num_classes = len(CLASS_NAMES) # Not always true, but better than nothing
+        num_classes = load_nb_classes(model_path)
     
     if model_type == "ResNet50_TL":
         model = ResNet50_TL(num_classes=num_classes)
@@ -377,7 +390,20 @@ def calculate_confusion_matrix_uniclass(model, device, dataloader : DataLoader, 
     plt.clf()
  
 def main() -> None:
-    print("Tools module")
+    # Some tests to check the functions
+    
+    # Shorten filename
+    print(shorten_filename("This_is_a_very_very_very_very_very_long_filename.jpg"))
+    
+    # validate path
+    test_path = "yahoooo/test/test/test/test"
+    validate_path(test_path)
+    if os.path.exists(test_path):
+        print("Path validation successful")
+        shutil.rmtree("yahoooo")
+    
+    print(load_nb_classes())
+    print("Model loaded" if load_model() else "Model not loaded")
     
 if __name__ == "__main__":
     print("To train please got to ~/pfe/ and run \'python main.py tools\'")

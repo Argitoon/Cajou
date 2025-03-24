@@ -78,3 +78,22 @@ def import_images_from_dropbox(dbx, remote_folder, local_folder):
     except dropbox.exceptions.ApiError as err:
         #print(f"Folder {remote_folder} not found on Dropbox")
         return 0
+
+def count_nb_classes_on_dropbox(dbx, folder_name):
+    """
+    Count the number of classes in the specified folder on Dropbox.
+    """
+    try:
+        # List files on Dropbox in the specified folder
+        result = dbx.files_list_folder(folder_name)
+        
+        # Count the number of classes
+        classes = set()
+        for entry in result.entries:
+            if isinstance(entry, dropbox.files.FolderMetadata):
+                classes.add(entry.name)
+                
+        return len(classes)
+    except dropbox.exceptions.ApiError as err:
+        #print(f"Folder {folder_name} not found on Dropbox")
+        return 0

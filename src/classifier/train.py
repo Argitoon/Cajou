@@ -30,6 +30,7 @@ TEST_DATA_PATH = config["LOCAL_PATH"]["TEST_UNICLASS_DATASET"]
 
 APP_MODEL_PATH = config["LOCAL_PATH"]["APP_MODEL"]
 APP_DATA_PATH = config["LOCAL_PATH"]["APP_DATASET"]
+CACHE = config["LOCAL_PATH"]["CACHE"]
 
 def select_model(model_type : str = MODEL_TYPE) -> nn.Module :
     """
@@ -194,24 +195,33 @@ def main(option : int = 0) -> None:
         model_path = MODEL_PATH
         trainval_dataset = DATA_PATH
         test_dataset = TEST_DATA_PATH
+        
     elif option == 1 : # Application training
         model_path = APP_MODEL_PATH
         trainval_dataset = APP_DATA_PATH
-        test_dataset = TEST_DATA_PATH
+        test_dataset = None
         
-        if not os.path.exists(trainval_dataset):
-            raise FileNotFoundError(f"The folder {trainval_dataset} does not exist, use the application to start "
-                             + "the training or create the folder and add images for all classes manually")        
     else:
         raise ValueError("Option not recognized")
+    
+    if not os.path.exists(trainval_dataset) :
+        print(f"The folder {trainval_dataset} does not exist, please create it and add images for all classes")
+        return
+
+    if not (test_dataset is None or os.path.exists(test_dataset)) :
+        test_dataset = None
+        return
 
     # II. Train the model
-    train_model(MODEL_TYPE, model_path, trainval_dataset, test_dataset)
+    train_model(model_type=MODEL_TYPE, model_path=model_path, trainval_dataset=trainval_dataset, 
+                test_dataset=test_dataset)
     
-    # III. Clean the app/data folder (if any) 
+    # III. Clean the app/data folder (only for app/data) and the cache folder
     if option == 1: 
         if os.path.exists(APP_DATA_PATH):
             shutil.rmtree(APP_DATA_PATH)
+    
+    shutil.rmtree(CACHE)
     
 if __name__ == "__main__":
     print("To train please got to ~/pfe/ and run \'python main.py train\'")

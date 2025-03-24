@@ -1,11 +1,12 @@
 {
     "CLASS_NAMES" : ["Jouet_Eveil", "Jouet_Imitation", "Playmobil", "Poupee", "Vehicule"],
     "CLASS_NAMES_FR" : ["Jouet d'éveil", "Jouet d'imitation", "Playmobil", "Poupée", "Véhicule"],
+    "CLASS_SYMBOLS" : ["E",             "I",                  "Y",         "P",      "V"],
     
     "MODEL_TYPE" : "RegNet_TL",
 
-    "APP_KEY" : "YOUR_APP_KEY",
-    "APP_SECRET" : "YOUR_APP_SECRET",
+    "APP_KEY" : "YOUR_KEY",
+    "APP_SECRET" : "YOUR_SECRET",
 
     "PID_SAVE" : "training_pid.txt",
 

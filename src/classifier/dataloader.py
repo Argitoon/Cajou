@@ -13,6 +13,7 @@ with open("variables.yaml", "r", encoding="utf-8") as file:
     config = yaml.load(file, Loader=yaml.FullLoader)
 
 CACHE = config['LOCAL_PATH']['CACHE']
+DATASET = config['LOCAL_PATH']['TRAIN_DATASET']
 
 transform_test = transforms.Compose([
             transforms.Resize((256, 256)),
@@ -136,7 +137,7 @@ def split_dataset(dataset : Dataset, test_size : float = 0.2) -> Tuple[Dataset, 
 
     return train_dataset, test_dataset
 
-def get_dataloader(data_dir : str = "classifier/data", batch_size : int = 32,
+def get_dataloader(data_dir : str = DATASET, batch_size : int = 32,
                    img_size : int = 256, num_workers : int = 0, transform_type : int = 0, 
                    augment_data : bool = True, test_size : float = 0.2) -> Tuple[DataLoader, DataLoader, List[str]] :
     """
@@ -178,7 +179,7 @@ def get_dataloader(data_dir : str = "classifier/data", batch_size : int = 32,
 
     return dataloader_train, dataloader_test, dataset.classes
 
-def main() -> None:
+def main() -> None:    
     dataloader_train, dataloader_test, classes = get_dataloader()
     
     print(f"Detecting classes : {classes}")

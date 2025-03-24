@@ -39,7 +39,7 @@ TOP_CLASSES = 0x08
 ALL = ACCURACY | CONFIDENCE | CONFUSION_MATRIX | TOP_CLASSES
 
 def plot_and_save_mAccuracy_mConfidence(results, 
-            save_path : str = config["LOCAL_PATH"]["TEST_RESULTS"] + "mAccuracy_mConfidence.png") -> None:
+            save_path : str = RESULTS_PATH + "mAccuracy_mConfidence.png") -> None:
     """
     Create a table with the results of the mAccuracy and mConfidence for each model and save it
     
@@ -72,7 +72,7 @@ def plot_and_save_mAccuracy_mConfidence(results,
     plt.savefig(save_path, bbox_inches='tight')
     plt.show()
 
-def calculate_mAccuracy_mConfidence(model_folder : str, 
+def calculate_mAccuracy_mConfidence(model_folder : str = MODEL_PATH,
                                     data_path : str = UNIDATA_PATH, 
                                     iteration : int = 10) -> dict :
     """
@@ -273,12 +273,12 @@ def test_multiclass(model_type : str = MODEL_TYPE,
                 classes, _, _ = file.split("_")
                 accepted_classes = []
                 for c in classes:
-                    if c == "I" : accepted_classes.append("Jouet_Imitation")
-                    if c == "E" : accepted_classes.append("Jouet_Eveil")
-                    if c == "P" : accepted_classes.append("Poupee")
-                    if c == "Y" : accepted_classes.append("Playmobil")
-                    if c == "V" : accepted_classes.append("Vehicule")
-                    if not c in ["I", "E", "P", "Y", "V"]:
+                    for char in config["CLASS_SYMBOLS"]:
+                        if c == char:
+                            accepted_classes.append(config["CLASS_NAMES"][config["CLASS_SYMBOLS"].index(char)])
+                            break
+    
+                    if not c in config["CLASS_SYMBOLS"]:
                         print(f"Unknown class {c}")
                         continue
                 
@@ -316,22 +316,39 @@ def main(option : int = 0) -> None :
     :param option: the option to choose (0 : test uniclass, 1 : test multiclass, 2 : test uniclass and multiclass, 3: compare models)
     """
     
+    def verify_paths(paths : list) -> bool:
+        """
+        Verify if the path exists
+        
+        :param paths: the list of paths
+        
+        :return: True if all paths exist, False otherwise
+        """
+        
+        err_paths = [path for path in paths if not os.path.exists(path)]
+        if len(err_paths) > 0:
+            print(f"Paths not found: {err_paths}")
+            return False
+        return True
+    
     if option == 0: # Test uniclass
         print(f"Testing model {MODEL_TYPE} with data from {UNIDATA_PATH}")
+        if not verify_paths([MODEL_PATH, UNIDATA_PATH]) : return
         test_uniclass(MODEL_TYPE, MODEL_PATH, UNIDATA_PATH, flags=ALL)
 
     elif option == 1: # Test multiclass        
         print(f"Testing model {MODEL_TYPE} with data from {MULTIDATA_PATH}")
+        if not verify_paths([MODEL_PATH, MULTIDATA_PATH]) : return
         test_multiclass(MODEL_TYPE, MODEL_PATH, MULTIDATA_PATH, flags=ALL)
     
     elif option == 2: # Test uniclass and multiclass
+        if not verify_paths([MODEL_PATH, UNIDATA_PATH, MULTIDATA_PATH]): return
         test_uniclass(MODEL_TYPE, MODEL_PATH, UNIDATA_PATH, flags=ALL)
         test_multiclass(MODEL_TYPE, MODEL_PATH, MULTIDATA_PATH, flags=ALL)
     
     elif option == 3: # Compare models
-        if not os.path.exists(COMPARE_MODELS_PATH):
-            raise FileNotFoundError(f"Model path {COMPARE_MODELS_PATH} does not exist")
-        calculate_mAccuracy_mConfidence(COMPARE_MODELS_PATH, iteration=100)
+        if not verify_paths([COMPARE_MODELS_PATH, UNIDATA_PATH]): return
+        calculate_mAccuracy_mConfidence(COMPARE_MODELS_PATH, UNIDATA_PATH, iteration=100)
     else:
         print("Unknown option")
 
